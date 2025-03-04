@@ -1,4 +1,4 @@
-FROM mambaorg/micromamba
+FROM mambaorg/micromamba@sha256:bfed7069792038966ef4529ddf672c3e7d079022f89fc11f3753493303d97543
 USER root
 
 WORKDIR /lilo
@@ -25,12 +25,15 @@ RUN apt-get install -y -q \
 RUN apt-get install -y -q \
     ocaml \
     opam
-RUN opam init --disable-sandboxing --yes
 
+RUN apt-cache policy ocaml
+RUN apt-cache policy opam
+RUN opam init --disable-sandboxing --yes
+RUN opam switch list-available
 # Build the DreamCoder OCaml binaries
-WORKDIR /lilo/dreamcoder
-RUN make setup-ocaml
-RUN make
+#WORKDIR /lilo/dreamcoder
+#RUN make setup-ocaml
+#RUN make
 WORKDIR /lilo
 
 # Install Rust
