@@ -2,19 +2,18 @@
 
 all:
 	cd solvers && \
-	  eval `opam env --switch lilo-solvers` && \
-	  dune build @install --profile=release && \
-	  dune install --sections bin --bindir=`pwd`/../
+	eval `opam env --switch .` && \
+	dune build @install --profile=release && \
+	dune install --sections bin --bindir=`pwd`/../
 	ln -fs ../../logoDrawString data/geom/logoDrawString
 
 clean:
 	rm -f clevrSolver clevrTest compression helmholtz logoDrawString \
-	  protonet_tester re2Test solver test_clevr_primitives versionDemo \
-	  data/geom/logoDrawString
-	cd solvers && eval `opam env --switch lilo-solvers` && dune clean
+	protonet_tester re2Test solver test_clevr_primitives versionDemo \
+	data/geom/logoDrawString
+	cd solvers && eval `opam env --switch .` && dune clean
 
 setup-ocaml:
 	opam update
-	rm -rf solver/_opam
-	cd solvers && opam switch create lilo-solvers ocaml-variants.4.14.2+options -v --locked --yes --update-invariant && eval $(opam env --switch=lilo-solvers) && opam install . --deps-only --yes 
-	# cd solvers && opam switch create 4.13.1 -v --deps-only --locked --yes .
+	cd solvers && opam switch create --deps-only --locked --yes .
+

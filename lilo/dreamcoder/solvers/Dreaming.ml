@@ -41,7 +41,7 @@ let remove_bad_dreams behavior_to_programs : (PolyList.t * (float* program list)
             | None -> Hashtbl.set containers.(output_index) ~key:this_output
                         ~data:(Int.Set.singleton this_index)
             | Some(others) -> Hashtbl.set containers.(output_index) ~key:this_output
-                                ~data:(Int.Set.add others this_index)
+                                ~data:(Set.add others this_index)
         ));
 
   (* Checks whether there exists another output vector that contains everything in this vector *)
@@ -55,7 +55,7 @@ let remove_bad_dreams behavior_to_programs : (PolyList.t * (float* program list)
           | None -> assert (false)
           | Some(others) ->
             match !dominating with
-            | Some(d) when Int.Set.length d > Int.Set.length others -> dominating := Some(others)
+            | Some(d) when Set.length d > Set.length others -> dominating := Some(others)
             | _ -> ());
 
     outputs |> List.iteri ~f:(fun output_index this_output ->
@@ -65,8 +65,8 @@ let remove_bad_dreams behavior_to_programs : (PolyList.t * (float* program list)
           | Some(others) ->
             match !dominating with
             | None -> dominating := Some(others)
-            | Some(d) -> dominating := Some(Int.Set.inter d others));
-    let nightmare = Int.Set.length (!dominating |> get_some) > 1 in
+            | Some(d) -> dominating := Some(Set.inter d others));
+    let nightmare = Set.length (!dominating |> get_some) > 1 in
     if nightmare && false then begin
       Printf.eprintf "NIGHTMARE!!!";
       get_resizable output_vectors i |> snd |> snd |> List.iter ~f:(fun p -> p |> string_of_program |> Printf.eprintf "%s\n")
