@@ -21,8 +21,9 @@ RUN apt-get install -y -q \
     libcairo2-dev \
     pkg-config
 
-# Install OCaml
+# Install vim and OCaml
 RUN apt-get install -y -q \
+    vim \
     ocaml \
     opam
 

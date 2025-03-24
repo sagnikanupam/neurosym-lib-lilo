@@ -91,7 +91,7 @@ class ExperimentType(str, Enum):
     COS_SIMILAR = "cos_similar"
 
 
-def get_domain_metadata(domain: str) -> dict:
+def get_domain_metadata(domain: str, use_folder: bool = False) -> dict:
     
     '''
     Returns domain metadata as a dictionary.
@@ -191,11 +191,12 @@ def get_domain_metadata(domain: str) -> dict:
         }
     }
     
-    for file in os.listdir("domain_metadata"):
-        if file.endswith(".json"):
-            with open(file, "r") as f:
-                metadata = json.load(f)
-                METADATA.update(metadata)
+    if use_folder:
+        for file in os.listdir("domain_metadata"):
+            if file.endswith(".json"):
+                with open(file, "r") as f:
+                    metadata = json.load(f)
+                    METADATA.update(metadata)
                 
     
 

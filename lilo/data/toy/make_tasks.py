@@ -19,16 +19,17 @@ DEFAULT_DATA_DIRECTORY = os.path.join(ROOT_DIR, f"dreamcoder/data/{DOMAIN_NAME}"
 TASKS = ""
 DEFAULT_TASKS_DIRECTORY = os.path.join(DEFAULT_DATA_DIRECTORY, TASKS)
 
+def addN(n):
+    x = random.choice(range(500))
+    return {"i": x, "o": x + n}
+    
+def add1(): return addN(1)
+def add2(): return addN(2)
+def add3(): return addN(3)
+    
 @TaskLoaderRegistry.register
 class ToyLoader(TaskDataLoader):
     name = "toy"
-    def addN(n):
-        x = random.choice(range(500))
-        return {"i": x, "o": x + n}
-    
-    def add1(): return addN(1)
-    def add2(): return addN(2)
-    def add3(): return addN(3)
     
     def load_tasks(self):
         tasks = {"train": [], "test": []}

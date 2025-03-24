@@ -214,9 +214,9 @@ def multicoreEnumeration(
     
     for task in g.keys():
         for k, v in task2grammar[task].expression2likelihood.items():
-            if k not in primitive_list:
+            if str(k) not in primitive_list and str(k)[0] != '$':
                 #This means that k is likely to be an abstraction, so we generate an abstraction production from the DreamCoder abstraction as described in the grammar
-                parsed_abstraction = parse_abstraction_dc_to_ns(k, primitive_list)
+                parsed_abstraction = parse_abstraction_dc_to_ns(str(k), primitive_list)
                 if parsed_abstraction != None:
                     s_exp = ns.SExpression(k, [parsed_abstraction])
                     type_argument = [dsl.compute_type_abs(x) for x in s_exp.children][0]
@@ -244,12 +244,15 @@ def multicoreEnumeration(
         for p in range(len(ordered_symbols)):
             dreamcoder_ns_mapping[ordered_symbols[p]] = p
         for k, v in likelihood_dict.items():
-           production_ind = dreamcoder_ns_mapping[k]
-           for prod_ind in range(num_productions):
-               for arity in range(max_arity):
-                   dist[prod_ind][arity][production_ind] = v
+            if str(k) == "$0":
+                production_ind = dreamcoder_ns_mapping["<root>"]
+            else:
+                production_ind = dreamcoder_ns_mapping[str(k)]
+            for prod_ind in range(num_productions):
+                for arity in range(max_arity):
+                    dist[prod_ind][arity][production_ind] = v
         #Filter the productions out that are impossible to reach
-        dist_dict[t] = dist * family._valid_mask
+        dist_dict[t] = ns.BigramProgramDistribution(dist_fam = family, distribution = dist * family._valid_mask)
     
     min_likelihood_dict = {task: 0.0 for task in tasks}
     enumerations = {task: [] for task in tasks}
