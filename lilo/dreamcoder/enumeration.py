@@ -13,6 +13,7 @@ import traceback
 import subprocess
 import numpy as np
 import time as time
+import torch
 
 DEFAULT_SOLVER_DIRECTORY = "."
 
@@ -252,7 +253,9 @@ def multicoreEnumeration(
                 for arity in range(max_arity):
                     dist[prod_ind][arity][production_ind] = v
         #Filter the productions out that are impossible to reach
-        dist_dict[t] = ns.BigramProgramDistribution(dist_fam = family, distribution = dist * family._valid_mask)
+        tensor_dist = family._normalize_parameters(torch.tensor(dist))
+        print(f"Size of tensor distribution for task {t} is: {tensor_dist.shape}, expected shape is: {family.parameters_shape()}")
+        dist_dict[t] = ns.BigramProgramDistribution(dist_fam = family, distribution = tensor_dist.numpy())
     
     min_likelihood_dict = {task: 0.0 for task in tasks}
     enumerations = {task: [] for task in tasks}
