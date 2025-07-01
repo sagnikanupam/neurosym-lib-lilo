@@ -261,7 +261,7 @@ def multicoreEnumeration(
         #Filter the productions out that are impossible to reach
         
         tensor_dist = torch.tensor(dist)
-        reshaped_tensor_dist = tensor_dist.reshape(tuple(list(tensor_dist.shape) + [1]))
+        reshaped_tensor_dist = tensor_dist.reshape(tuple([1] + list(tensor_dist.shape)))
         normalized_dist = family._normalize_parameters(reshaped_tensor_dist)
         dist_dict[t] = ns.BigramProgramDistribution(dist_fam = family, distribution = normalized_dist.numpy())
     
